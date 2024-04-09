@@ -1,0 +1,21 @@
+#Etap 1:Instalacja zależności i budowanie aplikacji
+FROM node:alpine as builder
+#Utworzenie katalogu aplikacji
+WORKDIR /app
+#Kopiowanie package.json
+COPY package*.json ./
+#Instalacja zależności
+RUN npm install
+#Kopiowanie plików aplikacji
+COPY . .
+#Etap 2:Konfiguracja serwera Nginx i uruchomienie aplikacji
+FROM nginx:latest
+#Kopiowanie skompilowanych plików aplikacji do katalogu domyślnego Nginx
+COPY --from=builder /app /usr/share/nginx/htm
+#Healthcheck
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
+#Eksponowanie portów
+EXPOSE 80
+#Uruchomienie serwera Nginx
+CMD ["nginx", "-g", "daemon off;"]
