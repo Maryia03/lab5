@@ -1,0 +1,8 @@
+Polecenie do budowy obrazu i wynik jego działania
+ docker build -t web-app --build-arg VERSION=1.0.0 .
+Polecenie uruchamiające serwer
+ docker run -d -p 8080:80 web-app
+Polecenie potwierdzające działanie kontenera i poprawne funkcjonowanieopracowanej aplikacji
+ docker ps
+ 
+ 
