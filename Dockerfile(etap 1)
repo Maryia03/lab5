@@ -1,0 +1,22 @@
+#Etap 1:Instalacja zależności i budowanie aplikacji
+FROM node:alpine as builder
+#Utworzenie katalogu aplikacji
+WORKDIR /app
+#Kopiowanie package.json
+COPY package*.json ./
+#Instalacja zależności
+RUN npm install
+#Kopiowanie plików aplikacji
+COPY . .
+#Etap 2:Tworzenie minimalnego obrazu produkcyjnego
+FROM node:alpine
+WORKDIR /app
+# Kopiowanie utworzoną aplikację z poprzedniego etapu
+COPY --from=builder /app .
+#Ustawienie zmiennej środowiskowej dla wersji aplikacji
+ARG VERSION
+ENV VERSION=$VERSION
+#Eksponowanie portów
+EXPOSE 8080
+#Uruchomienie serwera
+CMD ["node", "index.js"]
